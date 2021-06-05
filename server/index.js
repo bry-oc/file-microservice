@@ -1,6 +1,8 @@
 const cors = require('cors');
+const crypto = require('crypto');
 const dotenv = require('dotenv').config();
 const express = require('express');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
@@ -10,7 +12,30 @@ const PORT = process.env.port || 3001;
 const app = express();
 const url = process.env.MONGO_URI_TEST;
 
-const storage = new GridFsStorage({url});
+app.use(express.json())
+app.use(express.urlencoded({extended: true}));
+app.use(cors({optionsSuccessStatus: 200}));
+app.use(express.static(path.resolve(__dirname, '../client/build')));
+
+const storage = new GridFsStorage({
+    url: url,
+    file: (req, file) => {
+
+        return new Promise((resolve, reject) => {
+            crypto.randomBytes(16, (err, buf) => {
+                if(err) {
+                    return reject(err);
+                }
+                const filename = file.originalname;
+                const fileInfo = {
+                    filename: filename,
+                    bucketName: 'uploads'
+                };
+                resolve(fileInfo);
+            });
+        });
+    }
+});
 
 const upload = multer({storage});
 
@@ -18,9 +43,14 @@ mongoose.connect(process.env.MONGO_URI_TEST, { useNewUrlParser: true, useUnified
 
 const db = mongoose.connection;
 
+let gfs;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', function() {
+    gfs = new mongoose.mongo.GridFSBucket(db.db, {
+        bucketName: "uploads"
+    });
     console.log('Connection successful!');
 });
 
@@ -58,6 +88,16 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
             }
         })
     }
+})
+
+app.get('/api/view/:filename', (req, res) => {
+    gfs.find({filename: req.params.filename}).toArray((err, files) => {
+        if(files[0]){
+            gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+        } else {
+            return res.json({error: "File not found"});
+        }
+    })
 })
 
 app.listen(PORT, () => {
