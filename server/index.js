@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const path = require('path');
-const PORT = process.env.port || 3001;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 const url = process.env.MONGO_URI_TEST;
