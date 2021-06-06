@@ -50,9 +50,8 @@ function FileUpload() {
     return (
         <div className="wrapper">
             <form encType="multipart/form-data" method="POST" action="/api/fileanalyse">
-                <input type="file" name="upfile" id="upfile"></input>
-                <br></br><br></br>
-                <input type="submit" value="Upload"></input>
+                <input id="inputfield" type="file" name="upfile"></input>
+                <input id="button" type="submit" value="Upload"></input>
             </form>
             <div className="feedback">
                 {warning !== "" ? <p className="feedback">{warning}</p> : null}
