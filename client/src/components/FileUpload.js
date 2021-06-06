@@ -10,8 +10,13 @@ function FileUpload() {
     let uploadFile = (e) => {
         e.preventDefault();
         const file = e.target.upfile.files[0];
-        if(file === undefined){
-            return setWarning("Please select a file.")
+        if (file === undefined) {
+            setWarning("Please select a file.");
+            setAlert("");
+            setName("");
+            setType("");
+            setSize("");
+            return;
         }
         const formData = new FormData();
         formData.append('upfile', file);
@@ -22,22 +27,22 @@ function FileUpload() {
             method: 'POST',
             body: formData,
         })
-        .then((res) => res.json())
-        .then((data) => {
-            if(data.error){
-                setWarning(data.error);
-                setAlert("");
-                setName("");
-                setType("");
-                setSize("");
-            } else {
-                setWarning("");
-                setAlert("File Uploaded!");
-                setName(data.name);
-                setType(data.type);
-                setSize(data.size);
-            }
-        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.error) {
+                    setWarning(data.error);
+                    setAlert("");
+                    setName("");
+                    setType("");
+                    setSize("");
+                } else {
+                    setWarning("");
+                    setAlert("File Uploaded!");
+                    setName(data.name);
+                    setType(data.type);
+                    setSize(data.size);
+                }
+            })
     }
 
     return (
