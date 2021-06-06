@@ -7,6 +7,8 @@ function FileUpload() {
     const [type, setType] = React.useState("");
     const [size, setSize] = React.useState("");
 
+    const baseURL = window.location.href;
+
     let uploadFile = (e) => {
         e.preventDefault();
         const file = e.target.upfile.files[0];
@@ -55,7 +57,7 @@ function FileUpload() {
             <div className="feedback">
                 {warning !== "" ? <p className="feedback">{warning}</p> : null}
                 {alert !== "" ? <p className="feedback" id="alert">{alert}</p> : null}
-                {name !== "" ? <p className="feedback">File name: {name}</p> : null}
+                {name !== "" ? <p className="feedback">File name: <a href={baseURL+"api/view/"+name} target="_blank" rel="noopener noreferrer">{name}</a></p> : null}
                 {type !== "" ? <p className="feedback">Type: {type}</p> : null}
                 {size !== "" ? <p className="feedback">Size: {size} Bytes</p> : null}
             </div>
