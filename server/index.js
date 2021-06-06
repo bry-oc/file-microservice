@@ -61,6 +61,7 @@ const fileSchema = new mongoose.Schema({
 const File = mongoose.model('File', fileSchema);
 
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
+    console.log(req.file);
     if(!req.file){
         return res.json({error: "Please select a file to upload."});
     } else {

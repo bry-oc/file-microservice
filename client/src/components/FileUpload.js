@@ -49,7 +49,7 @@ function FileUpload() {
 
     return (
         <div className="wrapper">
-            <form onSubmit={uploadFile}>
+            <form action="/api/fileanalyse" method="post" encType="multipart/form-data">
                 <input type="file" name="upfile" id="upfile"></input>
                 <br></br><br></br>
                 <input type="submit" value="Upload"></input>
