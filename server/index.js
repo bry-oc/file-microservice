@@ -2,7 +2,6 @@ const cors = require('cors');
 const crypto = require('crypto');
 const dotenv = require('dotenv').config();
 const express = require('express');
-const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
@@ -20,7 +19,6 @@ app.use(express.static(path.resolve(__dirname, '../client/build')));
 const storage = new GridFsStorage({
     url: url,
     file: (req, file) => {
-
         return new Promise((resolve, reject) => {
             crypto.randomBytes(16, (err, buf) => {
                 if(err) {
